@@ -1,4 +1,4 @@
-#pragma METAINFO("NoRingBotW", 1, 0, "Super_Louis64")
+#pragma METAINFO("NoRingBotW", 2, 0, "JMcn")
 
 
 /*
@@ -21,8 +21,8 @@ init
 	controllerON = FALSE;
 	isRunning = FALSE;
 	isSquat = FALSE;
-	// remap sticks so you can use the right joycon to move
-	remapper_swap(STICK_2_X, STICK_1_X);
+	// remap sticks so you can use the right joycon to move 左右摇杆交换
+	remapper_swap(STICK_2_X, STICK_1_X); 
 	remapper_swap(STICK_2_Y, STICK_1_Y);
 	runCheck = 0;
 }
@@ -34,56 +34,63 @@ main
 			
 	nowRunning();
 			
-// swing to attake(noringcon)
+// swing to attake(noringcon) 向下甩 攻击
 	if(get_val(GYRO_1_Z) < -80.0)
 		{
-			set_val(BUTTON_17, 100.0);
+			set_val(BUTTON_17, 100.0); //Y 攻击
 			//set_val(BUTTON_15, 0.0);
 		}
 		
 // swing with ringcon
 	if(get_val(GYRO_1_X) > 50.0)
 		{
-			set_val(BUTTON_17, 100.0);
+			set_val(BUTTON_17, 100.0); //Y 攻击
 		}
 
-// lockon with ZR
-	if(get_val(BUTTON_5) > 0.0)
+// lockon with ZR，  ZR 变成注视
+	if(get_val(BUTTON_5) > 0.0)  //ZR 放箭
 		{
-			set_val(BUTTON_8, 100.0);
+			set_val(BUTTON_8, 100.0);  //ZL 注视
 			set_val(BUTTON_5, 0.0);
 		}
 	
 
-// Turn R into bow ZR
-	if(get_val(BUTTON_4) > 0.0)
+// Turn R into bow ZR，  R 变成放箭
+	if(get_val(BUTTON_4) > 0.0)  //R 投掷武器
 		{
-			set_val(BUTTON_5, 100.0);
+			set_val(BUTTON_5, 100.0);  //ZR 放箭
 			set_val(BUTTON_4, 0.0);
 		}
+		
 
-
-if(get_val(BUTTON_16) > 0.0)
+// B 变成跳跃
+if(get_val(BUTTON_16) > 0.0) //B 收起
 		{
 			set_val(BUTTON_16, 0.0);
-			set_val(BUTTON_14, 100.0);
-		}
-
-// run with left STICK button press
-	if(get_val(BUTTON_6) > 0.0)
-		{
-			set_val(BUTTON_6, 0.0);
-			set_val(BUTTON_16, 100.0);
+			set_val(BUTTON_14, 100.0);  //X 跳跃
 		}
 		
-// hand over head
+// X 长按切换视角/移动
+if(is_active(BUTTON_14) && time_active(BUTTON_14) >= 2000) {
+        remapper_swap(STICK_2_X, STICK_1_X); 
+		remapper_swap(STICK_2_Y, STICK_1_Y);
+    }
+
+// run with right STICK button press  按下右摇杆 变成收起
+	if(get_val(BUTTON_6) > 0.0)  //按下右摇杆
+		{
+			set_val(BUTTON_6, 0.0);
+			set_val(BUTTON_16, 100.0); //B 收起
+		}
+		
+// hand over head  HOME = L 道具
 	// if(get_val(ACCEL_2_Z) > 18.0 && get_val(GYRO_1_Z) < 5.0 && get_val(GYRO_1_Y) < 5.0 && get_val(BUTTON_5) < 100.0)
-	if(get_val(BUTTON_1) > 0.0)
+	if(get_val(BUTTON_1) > 0.0)  // Home键
 		{
 			set_val(BUTTON_1, 0.0);
-			if(check_release(BUTTON_19, 600))
+			if(check_release(BUTTON_19, 600))  //释放SL
 				{
-					set_val(BUTTON_7, 100);
+					set_val(BUTTON_7, 100); //L 道具
 				}
 		}
 
@@ -92,8 +99,9 @@ if(get_val(BUTTON_16) > 0.0)
 70 is a magic number that sets a pace for the user to be running at for 
 the controller's joystick to be activated
 increase if you want to run harder, decrease if you want to run less
+		如果不跑步，不能移动
 */
-	if(runCheck < 70)
+	if(runCheck < 75)
 		{
 			set_val(STICK_2_X, 0.0);
 			set_val(STICK_2_Y, 0.0);
@@ -102,7 +110,7 @@ increase if you want to run harder, decrease if you want to run less
 	
 	
 
-// ACCEL_1_Z = -25.00 = squats + Plus = start menu
+// ACCEL_1_Z = -25.00 = squats + Plus = start menu  蹲下 + 加号 = 菜单
 	if(get_val(ACCEL_1_Z) < -16.00 && get_val(BUTTON_3) == 100.0)
 		{
 			set_val(BUTTON_3, 100.0);
@@ -130,7 +138,7 @@ increase if you want to run harder, decrease if you want to run less
 */
 
 
-// ACCEL_1_Y > -20.00 = squats + HOME = Press Button 7
+// ACCEL_1_Y > -20.00 = squats + HOME = Press Button 7  蹲下 + HOME = L 道具
 	if(get_val(ACCEL_1_Y) > -20.00 && get_val(BUTTON_1) == 100.0)
 		{
 			set_val(BUTTON_1, 0.0);
